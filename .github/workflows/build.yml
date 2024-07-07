@@ -21,10 +21,7 @@ jobs:
         java-version: 17
         distribution: oracle
     
-    - name: Adicionar repositorio
-      run: dotnet nuget add source --username ${{ env.username }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/implandent/index.json"
-
-    - name: Descarga del código
+    - name: Descarga del cÃ³digo
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
@@ -51,7 +48,10 @@ jobs:
     - name: Inicializar SonarQube
       run: ./.sonar/scanner/dotnet-sonarscanner begin /k:"Implantdent_dal" /o:"implantdent" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
 
-    - name: Compilar la solución
+    - name: Adicionar repositorio
+      run: dotnet nuget add source --username ${{ env.username }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/implandent/index.json"
+
+    - name: Compilar la soluciÃ³n
       run: dotnet build ${{ env.solution }}.sln -c Debug
 
     - name: Ejecutar pruebas unitarias
