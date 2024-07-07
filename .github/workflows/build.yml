@@ -21,7 +21,7 @@ jobs:
         distribution: oracle
     
     - name: Adicionar repositorio
-      run: dotnet nuget add source --username ${{ env.username }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/implandent/index.json"
+      run: dotnet nuget add source --name github "https://nuget.pkg.github.com/implandent/index.json"
 
     - name: Descarga del código
       uses: actions/checkout@v3
