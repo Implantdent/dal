@@ -21,6 +21,11 @@ jobs:
         java-version: 17
         distribution: oracle
     
+    - name: Instalar SQL Server
+      uses: potatoqualitee/mssqlsuite@v1.7
+      with:
+        install: sqlengine
+
     - name: Descarga del código
       uses: actions/checkout@v3
       with:
