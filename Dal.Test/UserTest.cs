@@ -44,6 +44,21 @@ namespace Dal.Test
         }
 
         /// <summary>
+        /// Realiza la prueba de lectura de un listado de usuarios con ordenamiento
+        /// </summary>
+        [Fact]
+        public void List_UserFilteredOrdered_Ok()
+        {
+            //Arrange
+
+            //Act
+            ListResult<User> list = persistence.List("Active = 1", "UserId ASC", 2, 0);
+
+            //Assert
+            Assert.NotEqual(0, list.Total);
+        }
+
+        /// <summary>
         /// Realiza la prueba de lectura de un listado de usuarios con errores
         /// </summary>
         [Fact]
