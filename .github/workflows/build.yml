@@ -13,6 +13,7 @@ jobs:
       version: 1.0.${{ github.run_number }}
       versionSuffix: ${{ github.ref_name }}
       username: leandrobaena@gmail.com
+      ConnectionStrings__implantdent: Data Source=localhost;Initial Catalog=implantdentTest;User ID=sa;Password=dbatools.I0;Persist Security Info=False;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=True;Command Timeout=0
     steps:
 
     #- name: Setup Java 17
@@ -30,6 +31,9 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
+
+    - name: Crear base de datos de prueba
+      run: sqlcmd -S localhost -i Dal.Test/installDb.sql -U sa -P dbatools.I0
 
     - name: Inicializar base de datos de prueba
       run: sqlcmd -S localhost -i Dal.Test/installDb.sql -U sa -P dbatools.I0

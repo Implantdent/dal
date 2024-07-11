@@ -28,7 +28,7 @@ namespace Dal.Test
         }
 
         /// <summary>
-        /// Realiza la prueba de lectura de un listado de usaurios
+        /// Realiza la prueba de lectura de un listado de usuarios
         /// </summary>
         [Fact]
         public void ListTest()
