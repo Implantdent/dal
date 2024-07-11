@@ -15,11 +15,11 @@ jobs:
       username: leandrobaena@gmail.com
     steps:
 
-    - name: Setup Java 17
-      uses: actions/setup-java@v3.13.0
-      with:
-        java-version: 17
-        distribution: oracle
+    #- name: Setup Java 17
+    #  uses: actions/setup-java@v3.13.0
+    #  with:
+    #    java-version: 17
+    #    distribution: oracle
     
     - name: Instalar SQL Server
       uses: potatoqualitee/mssqlsuite@v1.7
@@ -32,7 +32,7 @@ jobs:
         fetch-depth: 0
 
     - name: Inicializar base de datos de prueba
-      run: sqlcmd -S localhost -i installDb.sql -U sa -P dbatools.I0
+      run: sqlcmd -S localhost -i Dal.Test/installDb.sql -U sa -P dbatools.I0
 
     - name: Cache de paquetes SonarCloud
       uses: actions/cache@v3
