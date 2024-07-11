@@ -174,7 +174,7 @@ namespace Dal.Persistences
             }
         }
 
-        /*/// <summary>
+        /// <summary>
         /// Trae un listado de roles asignados a un usuario desde la base de datos
         /// </summary>
         /// <param name="filters">Filtros aplicados a la consulta</param>
@@ -188,10 +188,11 @@ namespace Dal.Persistences
         {
             try
             {
-                QueryBuilder queryBuilder = new("idrole, role", "v_user_role");
-                using IDbConnection connection = new MySqlConnection(_connString);
-                List<Role> roles = connection.Query<Role>(queryBuilder.GetSelectForList("iduser = " + user.Id + (filters != "" ? " AND " : "") + filters, orders, limit, offset)).ToList();
-                int total = connection.ExecuteScalar<int>(queryBuilder.GetCountTotalSelectForList("iduser = " + user.Id + (filters != "" ? " AND " : "") + filters, orders));
+                fields = "RoleId, [Role]";
+                tables = "VwUserRole";
+                using IDbConnection connection = new SqlConnection(_connString);
+                List<Role> roles = connection.Query<Role>(GetSelectForList("UserId = " + user.Id + (filters != "" ? " AND " : "") + filters, orders, limit, offset)).ToList();
+                int total = connection.ExecuteScalar<int>(GetCountTotalSelectForList("UserId = " + user.Id + (filters != "" ? " AND " : "") + filters, orders));
                 return new(roles, total);
             }
             catch (Exception ex)
@@ -214,10 +215,11 @@ namespace Dal.Persistences
         {
             try
             {
-                QueryBuilder queryBuilder = new("idrole, name", "role");
-                using IDbConnection connection = new MySqlConnection(_connString);
-                List<Role> roles = connection.Query<Role>(queryBuilder.GetSelectForList("idrole NOT IN (SELECT idrole FROM user_role WHERE iduser = " + user.Id + ")" + (filters != "" ? " AND " : "") + filters, orders, limit, offset)).ToList();
-                int total = connection.ExecuteScalar<int>(queryBuilder.GetCountTotalSelectForList("idrole NOT IN (SELECT idrole FROM user_role WHERE iduser = " + user.Id + ")" + (filters != "" ? " AND " : "") + filters, orders));
+                fields = "RoleId, Name";
+                tables = "Role";
+                using IDbConnection connection = new SqlConnection(_connString);
+                List<Role> roles = connection.Query<Role>(GetSelectForList("RoleId NOT IN (SELECT RoleId FROM UserRole WHERE UserId = " + user.Id + ")" + (filters != "" ? " AND " : "") + filters, orders, limit, offset)).ToList();
+                int total = connection.ExecuteScalar<int>(GetCountTotalSelectForList("RoleId NOT IN (SELECT RoleId FROM UserRole WHERE UserId = " + user.Id + ")" + (filters != "" ? " AND " : "") + filters, orders));
                 return new(roles, total);
             }
             catch (Exception ex)
@@ -231,16 +233,14 @@ namespace Dal.Persistences
         /// </summary>
         /// <param name="role">Rol que se asigna al usuario</param>
         /// <param name="user">Usuario al que se le asigna el rol</param>
-        /// <param name="user1">Usuario que realiza la inserción</param>
         /// <returns>Rol asignado</returns>
         /// <exception cref="PersistentException">Si hubo una excepción al asignar el rol al usuario</exception>
-        public Role InsertRole(Role role, User user, User user1)
+        public Role InsertRole(Role role, User user)
         {
             try
             {
-                using IDbConnection connection = new MySqlConnection(_connString);
-                _ = connection.Execute("INSERT INTO user_role (iduser, idrole) VALUES (@IdUser, @IdRole)", new { IdUser = user.Id, IdRole = role.Id });
-                LogInsert(0, "user_role", "INSERT INTO user_role (iduser, idrole) VALUES (" + user.Id + ", " + role.Id + ")", user1.Id);
+                using IDbConnection connection = new SqlConnection(_connString);
+                _ = connection.Execute("INSERT INTO UserRole (UserId, RoleId) VALUES (@IdUser, @IdRole)", new { IdUser = user.Id, IdRole = role.Id });
                 return role;
             }
             catch (Exception ex)
@@ -254,22 +254,20 @@ namespace Dal.Persistences
         /// </summary>
         /// <param name="role">Rol a eliminarle al usuario</param>
         /// <param name="user">Usuario al que se le elimina el rol</param>
-        /// <param name="user1">Usuario que realiza la eliminación</param>
         /// <returns>Rol eliminado</returns>
         /// <exception cref="PersistentException">Si hubo una excepción al eliminar el rol del usuario</exception>
-        public Role DeleteRole(Role role, User user, User user1)
+        public Role DeleteRole(Role role, User user)
         {
             try
             {
-                using IDbConnection connection = new MySqlConnection(_connString);
-                _ = connection.Execute("DELETE FROM user_role WHERE iduser = @IdUser AND idrole = @IdRole", new { IdUser = user.Id, IdRole = role.Id });
-                LogDelete(0, "user_role", "DELETE FROM user_role WHERE iduser = " + user.Id + " AND idrole = " + role.Id, user1.Id);
+                using IDbConnection connection = new SqlConnection(_connString);
+                _ = connection.Execute("DELETE FROM UserRole WHERE UserId = @IdUser AND RoleId = @IdRole", new { IdUser = user.Id, IdRole = role.Id });
                 return role;
             }
             catch (Exception ex)
             {
                 throw new PersistentException("Error al eliminar el rol del usuario", ex);
             }
-        }*/
+        }
     }
 }

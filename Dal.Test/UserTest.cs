@@ -382,5 +382,166 @@ namespace Dal.Test
             //Assert
             Assert.Throws<PersistentException>(() => persistence.UpdatePassword(user, "Pass6"));
         }
+
+        /// <summary>
+        /// Realiza la prueba de lectura de un listado de roles asignados a un usuario
+        /// </summary>
+        [Fact]
+        public void ListRoles_User_Ok()
+        {
+            //Arrange
+            User user = new()
+            {
+                Id = 1
+            };
+
+            //Act
+            ListResult<Role> list = persistence.ListRoles("", "", 0, 0, user);
+
+            //Assert
+            Assert.NotEqual(0, list.Total);
+        }
+
+        /// <summary>
+        /// Realiza la prueba de lectura de un listado de roles asignados a un usuario con errores
+        /// </summary>
+        [Fact]
+        public void ListRoles_User_Exception()
+        {
+            //Arrange
+            User user = new()
+            {
+                Id = 1
+            };
+
+            //Act
+
+            //Assert
+            Assert.Throws<PersistentException>(() => persistence.ListRoles("CampoNoexiste=1", "", 2, 0, user));
+        }
+
+        /// <summary>
+        /// Realiza la prueba de lectura de un listado de roles no asignados a un usuario
+        /// </summary>
+        [Fact]
+        public void ListNotRoles_User_Ok()
+        {
+            //Arrange
+            User user = new()
+            {
+                Id = 1
+            };
+
+            //Act
+            ListResult<Role> list = persistence.ListNotRoles("", "", 0, 0, user);
+
+            //Assert
+            Assert.NotEqual(0, list.Total);
+        }
+
+        /// <summary>
+        /// Realiza la prueba de lectura de un listado de roles no asignados a un usuario con errores
+        /// </summary>
+        [Fact]
+        public void ListNotRoles_User_Exception()
+        {
+            //Arrange
+            User user = new()
+            {
+                Id = 1
+            };
+
+            //Act
+
+            //Assert
+            Assert.Throws<PersistentException>(() => persistence.ListNotRoles("CampoNoexiste=1", "", 2, 0, user));
+        }
+
+        /// <summary>
+        /// Realiza la prueba de inserción de un rol a un usuario
+        /// </summary>
+        [Fact]
+        public void InsertRole_User_Ok()
+        {
+            //Arrange
+            User user = new()
+            {
+                Id = 3
+            };
+            Role role = new()
+            {
+                Id = 1
+            };
+
+            //Act
+            role = persistence.InsertRole(role, user);
+
+            //Assert
+            Assert.NotEqual(0, role.Id);
+        }
+
+        /// <summary>
+        /// Realiza la prueba de inserción de un rol a un usuario con error
+        /// </summary>
+        [Fact]
+        public void InsertRole_User_Exception()
+        {
+            //Arrange
+            User user = new()
+            {
+                Id = 1
+            };
+            Role role = new()
+            {
+                Id = 1
+            };
+
+            //Act
+
+            //Assert
+            Assert.Throws<PersistentException>(() => persistence.InsertRole(role, user));//Trata de adicionar una relación ya existente
+        }
+
+        /// <summary>
+        /// Realiza la prueba de eliminación de un rol a un usuario
+        /// </summary>
+        [Fact]
+        public void DeleteRole_User_Ok()
+        {
+            //Arrange
+            User user = new()
+            {
+                Id = 2
+            };
+            Role role = new()
+            {
+                Id = 2
+            };
+
+            //Act
+            role = persistence.DeleteRole(role, user);
+
+            //Assert
+            Assert.NotEqual(0, role.Id);
+        }
+
+        /// <summary>
+        /// Realiza la prueba de eliminación de un rol a un usuario con error
+        /// </summary>
+        [Fact]
+        public void DeleteRole_User_Exception()
+        {
+            //Arrange
+            User? user = null;
+            Role role = new()
+            {
+                Id = 1
+            };
+
+            //Act
+
+            //Assert
+            Assert.Throws<PersistentException>(() => persistence.DeleteRole(role, user));
+        }
     }
 }
