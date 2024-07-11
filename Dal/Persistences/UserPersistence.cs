@@ -93,7 +93,6 @@ namespace Dal.Persistences
             }
         }
 
-
         /// <summary>
         /// Consulta un usuario dado su email y contraseña
         /// </summary>

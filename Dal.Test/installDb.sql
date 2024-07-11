@@ -69,3 +69,32 @@ FROM
 	INNER JOIN [Role] r
 		ON ur.RoleId = r.RoleId
 GO
+
+CREATE TABLE [LogDb]
+(
+	[LogDbId] BIGINT NOT NULL PRIMARY KEY IDENTITY, 
+    [Date] DATETIME NOT NULL, 
+    [Action] CHAR NOT NULL, 
+    [TableId] BIGINT NOT NULL, 
+    [Table] VARCHAR(200) NOT NULL, 
+    [Sql] TEXT NOT NULL, 
+    [UserId] SMALLINT NOT NULL, 
+    CONSTRAINT [FK_LogDb_User] FOREIGN KEY ([UserId]) REFERENCES [User]([UserId])
+)
+GO
+
+INSERT INTO [LogDb] ([Date], [Action], [TableId], [Table], [Sql], [UserId])
+VALUES
+(GETDATE(), 'I', 1, 'LogDb', 'Test 1', 1),
+(GETDATE(), 'U', 2, 'LogDb', 'Test 2', 1),
+(GETDATE(), 'D', 3, 'LogDb', 'Test 3', 1)
+GO
+
+CREATE VIEW [VwLogDb] AS
+SELECT
+	l.LogDbId, l.[Date], l.[Action], l.TableId, l.[Table], l.[Sql], l.UserId, u.Email, u.Name, u.Active
+FROM
+	[LogDb] l
+	INNER JOIN [User] u
+		ON l.UserId = u.UserId
+GO
