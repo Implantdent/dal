@@ -23,12 +23,12 @@ namespace Dal
         /// <summary>
         /// Listado de campos que se consultan en un listado de entidades
         /// </summary>
-        protected string fields;
+        protected string fields = string.Empty;
 
         /// <summary>
         /// Listado de tablas sobre las que se consultan un listado de entidades
         /// </summary>
-        protected string tables;
+        protected string tables = string.Empty;
 
         /// <summary>
         /// Trae un listado de entidades

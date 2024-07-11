@@ -16,11 +16,11 @@ jobs:
       ConnectionStrings__implantdent: Data Source=localhost;Initial Catalog=implantdentTest;User ID=sa;Password=dbatools.I0;Persist Security Info=False;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=True;Command Timeout=0
     steps:
 
-    #- name: Setup Java 17
-    #  uses: actions/setup-java@v3.13.0
-    #  with:
-    #    java-version: 17
-    #    distribution: oracle
+    - name: Setup Java 17
+      uses: actions/setup-java@v3.13.0
+      with:
+        java-version: 17
+        distribution: oracle
     
     - name: Instalar SQL Server
       uses: potatoqualitee/mssqlsuite@v1.7
