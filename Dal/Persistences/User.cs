@@ -30,12 +30,12 @@ namespace Dal.Persistences
             }
         }
 
-        public override User Read(User user)
+        public override User Read(User entity)
         {
             try
             {
                 using IDbConnection connection = new SqlConnection(_connString);
-                User? result = connection.QuerySingleOrDefault<User>("SELECT UserId AS Id, Email, Name, Active FROM [User] WHERE UserId = @Id", user);
+                User? result = connection.QuerySingleOrDefault<User>("SELECT UserId AS Id, Email, Name, Active FROM [User] WHERE UserId = @Id", entity);
                 if (result == null)
                 {
                     return new();
@@ -51,13 +51,13 @@ namespace Dal.Persistences
             }
         }
 
-        public override User Insert(User user)
+        public override User Insert(User entity)
         {
             try
             {
                 using IDbConnection connection = new SqlConnection(_connString);
-                user.Id = connection.QuerySingleOrDefault<short>("INSERT INTO [User] (Email, Name, Password, Active) VALUES (@Email, @Name, CONVERT(VARCHAR(MAX), HASHBYTES('SHA2_512', '@Email'), 2), @Active); SELECT CAST(SCOPE_IDENTITY() AS SMALLINT);", user);
-                return user;
+                entity.Id = connection.QuerySingleOrDefault<short>("INSERT INTO [User] (Email, Name, Password, Active) VALUES (@Email, @Name, CONVERT(VARCHAR(MAX), HASHBYTES('SHA2_512', '@Email'), 2), @Active); SELECT CAST(SCOPE_IDENTITY() AS SMALLINT);", entity);
+                return entity;
             }
             catch (Exception ex)
             {
@@ -65,13 +65,27 @@ namespace Dal.Persistences
             }
         }
 
-        public override User Delete(User user)
+        public override User Update(User entity)
         {
             try
             {
                 using IDbConnection connection = new SqlConnection(_connString);
-                _ = connection.Execute("DELETE FROM [User] WHERE UserId = @Id", user);
-                return user;
+                _ = connection.Execute("UPDATE [User] SET Email = @Email, Name = @Name, Active = @Active WHERE UserId = @Id", entity);
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                throw new PersistentException("Error al insertar el usuario", ex);
+            }
+        }
+
+        public override User Delete(User entity)
+        {
+            try
+            {
+                using IDbConnection connection = new SqlConnection(_connString);
+                _ = connection.Execute("DELETE FROM [User] WHERE UserId = @Id", entity);
+                return entity;
             }
             catch (Exception ex)
             {
@@ -79,20 +93,22 @@ namespace Dal.Persistences
             }
         }
 
-        /*
+
         /// <summary>
-        /// Consulta un usuario dado su login y contraseña
+        /// Consulta un usuario dado su email y contraseña
         /// </summary>
         /// <param name="entity">Usuario a consultar</param>
         /// <param name="password">Contraseña del usuario</param>
         /// <returns>Usuario con los datos cargados desde la base de datos</returns>
         /// <exception cref="PersistentException">Si hubo una excepción al consultar el usuario</exception>
-        public User ReadByLoginAndPassword(User entity, string password)
+        public User ReadByEmailAndPassword(User entity, string password)
         {
             try
             {
-                using IDbConnection connection = new MySqlConnection(_connString);
-                User result = connection.QuerySingleOrDefault<User>("SELECT iduser, login, name, active FROM user WHERE login = @Login AND password = SHA2(@Pass, 512) AND active = 1", new { entity.Login, Pass = password });
+                using IDbConnection connection = new SqlConnection(_connString);
+                User? result = connection.QuerySingleOrDefault<User>(
+                    "SELECT UserId AS Id, Email, Name, Active FROM [User] WHERE Email = @Email AND [Password] = CONVERT(VARCHAR(MAX), HASHBYTES('SHA2_512', CAST(@Pass AS VARCHAR)), 2) AND Active = 1",
+                    new { entity.Email, Pass = password });
                 if (result == null)
                 {
                     entity = new();
@@ -115,12 +131,12 @@ namespace Dal.Persistences
         /// <param name="entity">Usuario a consultar</param>
         /// <returns>Usuario si existe y está activo en la base de datos</returns>
         /// <exception cref="PersistentException">Si hubo una excepción al consultar el usuario</exception>
-        public User ReadByLogin(User entity)
+        public User ReadByEmail(User entity)
         {
             try
             {
-                using IDbConnection connection = new MySqlConnection(_connString);
-                User result = connection.QuerySingleOrDefault<User>("SELECT iduser, login, name, active FROM user WHERE login = @Login AND active = 1", entity);
+                using IDbConnection connection = new SqlConnection(_connString);
+                User? result = connection.QuerySingleOrDefault<User>("SELECT UserId AS Id, Email, Name, Active FROM [User] WHERE Email = @Email AND Active = 1", entity);
                 if (result == null)
                 {
                     entity = new();
@@ -142,25 +158,23 @@ namespace Dal.Persistences
         /// </summary>
         /// <param name="entity">Usuario a actualizar</param>
         /// <param name="password">Nueva contraseña del usuario</param>
-        /// <param name="user">Usuario que realiza la actualización</param>
         /// <returns>Usuario actualizado</returns>
         /// <exception cref="PersistentException">Si hubo una excepción al actualizar el usuario</exception>
-        public User UpdatePassword(User entity, string password, User user)
+        public User UpdatePassword(User entity, string password)
         {
             try
             {
-                using IDbConnection connection = new MySqlConnection(_connString);
-                _ = connection.Execute("UPDATE user SET password = SHA2(@Pass, 512) WHERE iduser = @Id", new { Pass = password, entity.Id });
-                LogUpdate(entity.Id, "user", "UPDATE user SET password = 'xxxxxx' WHERE iduser = " + entity.Id, user.Id);
+                using IDbConnection connection = new SqlConnection(_connString);
+                _ = connection.Execute("UPDATE [User] SET Password = CONVERT(VARCHAR(MAX), HASHBYTES('SHA2_512', CAST(@Pass AS VARCHAR)), 2) WHERE UserId = @Id", new { Pass = password, entity.Id });
                 return entity;
             }
             catch (Exception ex)
             {
-                throw new PersistentException("Error al actualizar el usuario", ex);
+                throw new PersistentException("Error al actualizar la contraseña del usuario", ex);
             }
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Trae un listado de roles asignados a un usuario desde la base de datos
         /// </summary>
         /// <param name="filters">Filtros aplicados a la consulta</param>

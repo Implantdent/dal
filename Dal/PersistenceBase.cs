@@ -57,6 +57,14 @@ namespace Dal
         public abstract T Insert(T entity);
 
         /// <summary>
+        /// Actualiza una entidad de la base de datos
+        /// </summary>
+        /// <param name="entity">Entidad a actualizar</param>
+        /// <returns>Entidad actualizada</returns>
+        /// <exception cref="PersistentException">Si hubo una excepción al actualizar la entidad</exception>
+        public abstract T Update(T entity);
+
+        /// <summary>
         /// Elimina una entidad de la base de datos
         /// </summary>
         /// <param name="entity">Entidad a eliminar</param>
