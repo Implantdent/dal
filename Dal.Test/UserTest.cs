@@ -1,12 +1,31 @@
 ﻿using Dal.Dto;
 using Dal.Persistences;
 using Entities;
+using Microsoft.Extensions.Configuration;
 
 namespace Dal.Test
 {
     public class UserTest
     {
-        private readonly UserPersistence persistence = new("Data Source=PC-100500;Initial Catalog=implantdent;User ID=sa;Password=Santi693*;Persist Security Info=False;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=True;Command Timeout=0");
+        private readonly UserPersistence persistence;
+
+        /// <summary>
+        /// Configuración de la aplicación de pruebas
+        /// </summary>
+        private readonly IConfiguration _configuration;
+
+        /// <summary>
+        /// Inicializa la configuración de la prueba
+        /// </summary>
+        public UserTest()
+        {
+            //Arrange
+            _configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", false, false)
+                .AddEnvironmentVariables()
+                .Build();
+            persistence = new(_configuration.GetConnectionString("implantdent") ?? "");
+        }
 
         /// <summary>
         /// Realiza la prueba de lectura de un listado de usaurios
