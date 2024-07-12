@@ -88,7 +88,7 @@ namespace Dal.Test
             log = persistence.Read(log);
 
             //Assert
-            Assert.Equal("Test 1", log.Sql);
+            Assert.Equal("Test 1", log.Values);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Dal.Test
                 Action = 'I',
                 TableId = 2,
                 Table = "Test",
-                Sql = "Test insert",
+                Values = "Test insert",
                 User = new User() { Id = 1 }
             };
 
@@ -146,6 +146,7 @@ namespace Dal.Test
 
             //Assert
             Assert.NotEqual(0, log.Id);
+            Assert.NotEqual(0, persistence.GetEntityId());
         }
 
         /// <summary>
@@ -199,6 +200,18 @@ namespace Dal.Test
 
             //Assert
             Assert.NotEqual(0, log.Id);
+        }
+
+        /// <summary>
+        /// Realiza la prueba de consulta el nombre de la tabla
+        /// </summary>
+        [Fact]
+        public void GetTableName_User_Ok()
+        {
+            //Arrange
+            //Act
+            //Assert
+            Assert.Equal("LogDb", persistence.GetTableName());
         }
     }
 }

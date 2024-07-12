@@ -144,6 +144,7 @@ namespace Dal.Test
 
             //Assert
             Assert.NotEqual(0, user.Id);
+            Assert.NotEqual(0, persistence.GetEntityId());
         }
 
         /// <summary>
@@ -241,6 +242,18 @@ namespace Dal.Test
 
             //Assert
             Assert.Throws<PersistentException>(() => persistence.Delete(user));
+        }
+
+        /// <summary>
+        /// Realiza la prueba de consulta el nombre de la tabla
+        /// </summary>
+        [Fact]
+        public void GetTableName_User_Ok()
+        {
+            //Arrange
+            //Act
+            //Assert
+            Assert.Equal("[User]", persistence.GetTableName());
         }
 
         /// <summary>

@@ -49,5 +49,19 @@ namespace Dal
         /// <returns>Entidad eliminada</returns>
         /// <exception cref="PersistentException">Si hubo una excepción al eliminar la entidad</exception>
         T Delete(T entity);
+
+        /// <summary>
+        /// Retorna el nombre de la tabla a la que hace referencia la persistencia.
+        /// Necesario para el registro de eventos en la base de datos
+        /// </summary>
+        /// <returns>Nombre de la tabla</returns>
+        string GetTableName();
+
+        /// <summary>
+        /// Retorna el identificador de la entidad más recientemente procesada
+        /// Necesario para el registro de eventos en la base de datos
+        /// </summary>
+        /// <returns>Identificador de la entidad procesada</returns>
+        long GetEntityId();
     }
 }
