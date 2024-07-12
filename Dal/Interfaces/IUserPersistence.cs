@@ -8,7 +8,7 @@ namespace Dal.Persistences
     /// Métodos de extensión para el manejo de la persistencia de usuarios en la base de datos
     /// </summary>
     /// <param name="_connString">Cadena de conexión a la base de datos</param>
-    public interface IUserPersistence
+    public interface IUserPersistence : IPersistence<User>
     {
         /// <summary>
         /// Consulta un usuario dado su email y contraseña
