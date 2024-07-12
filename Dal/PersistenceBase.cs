@@ -30,6 +30,11 @@ namespace Dal
         protected string tables = string.Empty;
 
         /// <summary>
+        /// Identificador de la identidad procesada
+        /// </summary>
+        protected long entityId = 0;
+
+        /// <summary>
         /// Constante para el manejo de la condición de filtrado
         /// </summary>
         protected const string AND = " AND ";
@@ -43,6 +48,13 @@ namespace Dal
         public abstract T Update(T entity);
 
         public abstract T Delete(T entity);
+
+        public abstract string GetTableName();
+
+        public long GetEntityId()
+        {
+            return entityId;
+        }
 
         /// <summary>
         /// Crea una sentencia SELECT con filtros, ordenamientos, y límite de registros a traer
