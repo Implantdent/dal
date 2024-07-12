@@ -190,8 +190,8 @@ namespace Dal.Persistences
                 fields = "RoleId, [Role]";
                 tables = "VwUserRole";
                 using IDbConnection connection = new SqlConnection(_connString);
-                List<Role> roles = connection.Query<Role>(GetSelectForList("UserId = " + user.Id + (filters != "" ? " AND " : "") + filters, orders, limit, offset)).ToList();
-                int total = connection.ExecuteScalar<int>(GetCountTotalSelectForList("UserId = " + user.Id + (filters != "" ? " AND " : "") + filters, orders));
+                List<Role> roles = connection.Query<Role>(GetSelectForList("UserId = " + user.Id + (filters != "" ? AND : "") + filters, orders, limit, offset)).ToList();
+                int total = connection.ExecuteScalar<int>(GetCountTotalSelectForList("UserId = " + user.Id + (filters != "" ? AND : "") + filters, orders));
                 return new(roles, total);
             }
             catch (Exception ex)
@@ -217,8 +217,8 @@ namespace Dal.Persistences
                 fields = "RoleId, Name";
                 tables = "Role";
                 using IDbConnection connection = new SqlConnection(_connString);
-                List<Role> roles = connection.Query<Role>(GetSelectForList("RoleId NOT IN (SELECT RoleId FROM UserRole WHERE UserId = " + user.Id + ")" + (filters != "" ? " AND " : "") + filters, orders, limit, offset)).ToList();
-                int total = connection.ExecuteScalar<int>(GetCountTotalSelectForList("RoleId NOT IN (SELECT RoleId FROM UserRole WHERE UserId = " + user.Id + ")" + (filters != "" ? " AND " : "") + filters, orders));
+                List<Role> roles = connection.Query<Role>(GetSelectForList("RoleId NOT IN (SELECT RoleId FROM UserRole WHERE UserId = " + user.Id + ")" + (filters != "" ? AND : "") + filters, orders, limit, offset)).ToList();
+                int total = connection.ExecuteScalar<int>(GetCountTotalSelectForList("RoleId NOT IN (SELECT RoleId FROM UserRole WHERE UserId = " + user.Id + ")" + (filters != "" ? AND : "") + filters, orders));
                 return new(roles, total);
             }
             catch (Exception ex)

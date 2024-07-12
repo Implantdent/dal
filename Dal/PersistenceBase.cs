@@ -31,6 +31,11 @@ namespace Dal
         protected string tables = string.Empty;
 
         /// <summary>
+        /// Constante para el manejo de la condición de filtrado
+        /// </summary>
+        protected const string AND = " AND ";
+
+        /// <summary>
         /// Trae un listado de entidades
         /// </summary>
         /// <param name="filters">Filtros aplicados a la consulta</param>
