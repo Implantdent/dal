@@ -1,5 +1,4 @@
 ﻿using Dal.Dto;
-using Dal.Exceptions;
 using Entities;
 using System.Text;
 
@@ -13,7 +12,7 @@ namespace Dal
     /// Inicializa la cadena de conexión a la base de datos
     /// </remarks>
     /// <param name="connString">Cadena de conexión a la base de datos</param>
-    public abstract class PersistenceBase<T>(string connString) where T : IEntity
+    public abstract class PersistenceBase<T>(string connString) : IPersistence<T> where T : IEntity
     {
         /// <summary>
         /// Cadena de conexión a la base de datos
@@ -35,46 +34,14 @@ namespace Dal
         /// </summary>
         protected const string AND = " AND ";
 
-        /// <summary>
-        /// Trae un listado de entidades
-        /// </summary>
-        /// <param name="filters">Filtros aplicados a la consulta</param>
-        /// <param name="orders">Ordenamientos aplicados a la consulta</param>
-        /// <param name="limit">Límite de registros a consultar</param>
-        /// <param name="offset">Registro inicial a traer</param>
-        /// <returns>Listado de entidades leídas</returns>
-        /// <exception cref="PersistentException">Si hubo una excepción al leer el listado de entidades</exception>
         public abstract ListResult<T> List(string filters, string orders, int limit, int offset);
 
-        /// <summary>
-        /// Carga los datos de una entidad desde la base de datos
-        /// </summary>
-        /// <param name="entity">Entidad que se desea cargar de la base de datos</param>
-        /// <exception cref="PersistentException">Si hubo una excepción al leer la entidad</exception>
         public abstract T Read(T entity);
 
-        /// <summary>
-        /// Inserta una entidad en la base de datos
-        /// </summary>
-        /// <param name="entity">Entidad a insertar</param>
-        /// <returns>Entidad insertada</returns>
-        /// <exception cref="PersistentException">Si hubo una excepción al insertar la entidad</exception>
         public abstract T Insert(T entity);
 
-        /// <summary>
-        /// Actualiza una entidad de la base de datos
-        /// </summary>
-        /// <param name="entity">Entidad a actualizar</param>
-        /// <returns>Entidad actualizada</returns>
-        /// <exception cref="PersistentException">Si hubo una excepción al actualizar la entidad</exception>
         public abstract T Update(T entity);
 
-        /// <summary>
-        /// Elimina una entidad de la base de datos
-        /// </summary>
-        /// <param name="entity">Entidad a eliminar</param>
-        /// <returns>Entidad eliminada</returns>
-        /// <exception cref="PersistentException">Si hubo una excepción al eliminar la entidad</exception>
         public abstract T Delete(T entity);
 
         /// <summary>
