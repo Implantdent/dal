@@ -34,6 +34,7 @@ namespace Dal.Persistences
         {
             try
             {
+                entityId = entity.Id;
                 using IDbConnection connection = new SqlConnection(_connString);
                 User? result = connection.QuerySingleOrDefault<User>("SELECT UserId AS Id, Email, Name, Active FROM [User] WHERE UserId = @Id", entity);
                 if (result == null)
@@ -57,6 +58,7 @@ namespace Dal.Persistences
             {
                 using IDbConnection connection = new SqlConnection(_connString);
                 entity.Id = connection.QuerySingleOrDefault<short>("INSERT INTO [User] (Email, Name, Password, Active) VALUES (@Email, @Name, CONVERT(VARCHAR(MAX), HASHBYTES('SHA2_512', '@Email'), 2), @Active); SELECT CAST(SCOPE_IDENTITY() AS SMALLINT);", entity);
+                entityId = entity.Id;
                 return entity;
             }
             catch (Exception ex)
@@ -69,6 +71,7 @@ namespace Dal.Persistences
         {
             try
             {
+                entityId = entity.Id;
                 using IDbConnection connection = new SqlConnection(_connString);
                 _ = connection.Execute("UPDATE [User] SET Email = @Email, Name = @Name, Active = @Active WHERE UserId = @Id", entity);
                 return entity;
@@ -83,6 +86,7 @@ namespace Dal.Persistences
         {
             try
             {
+                entityId = entity.Id;
                 using IDbConnection connection = new SqlConnection(_connString);
                 _ = connection.Execute("DELETE FROM [User] WHERE UserId = @Id", entity);
                 return entity;
@@ -91,6 +95,11 @@ namespace Dal.Persistences
             {
                 throw new PersistentException("Error al eliminar el usuario", ex);
             }
+        }
+
+        public override string GetTableName()
+        {
+            return "[User]";
         }
 
         /// <summary>
@@ -163,6 +172,7 @@ namespace Dal.Persistences
         {
             try
             {
+                entityId = entity.Id;
                 using IDbConnection connection = new SqlConnection(_connString);
                 _ = connection.Execute("UPDATE [User] SET Password = CONVERT(VARCHAR(MAX), HASHBYTES('SHA2_512', CAST(@Pass AS VARCHAR)), 2) WHERE UserId = @Id", new { Pass = password, entity.Id });
                 return entity;

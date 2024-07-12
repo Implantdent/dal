@@ -38,7 +38,7 @@ Proyecto Dal
 | Paquete | Versión |
 |:--|:-:|
 | Dapper | 2.1.35 |
-| Entities | 1.0.23 |
+| Entities | 1.0.26 |
 | Microsoft.Data.SqlClient | 5.2.1 |
 
 Proyecto Dal.Test

@@ -18,7 +18,7 @@ namespace Dal.Persistences
         {
             try
             {
-                fields = "LogDbId AS Id, Date, Action, TableId, [Table], [Sql], UserId AS Id, Email, Name, Active";
+                fields = "LogDbId AS Id, Date, Action, TableId, [Table], [Values], UserId AS Id, Email, Name, Active";
                 tables = "VwLogDb";
                 using IDbConnection connection = new SqlConnection(_connString);
                 List<LogDb> users = connection.Query<LogDb, User, LogDb>(
@@ -44,7 +44,7 @@ namespace Dal.Persistences
             try
             {
                 using IDbConnection connection = new SqlConnection(_connString);
-                IEnumerable<LogDb> result = connection.Query<LogDb, User, LogDb>("SELECT LogDbId AS Id, Date, Action, TableId, [Table], [Sql], UserId AS Id, Email, Name, Active FROM VwLogDb WHERE LogDbId = @Id",
+                IEnumerable<LogDb> result = connection.Query<LogDb, User, LogDb>("SELECT LogDbId AS Id, Date, Action, TableId, [Table], [Values], UserId AS Id, Email, Name, Active FROM VwLogDb WHERE LogDbId = @Id",
                     (l, u) =>
                     {
                         l.User = u;
@@ -73,8 +73,9 @@ namespace Dal.Persistences
             try
             {
                 using IDbConnection connection = new SqlConnection(_connString);
-                entity.Id = connection.QuerySingleOrDefault<short>("INSERT INTO LogDb (Date, Action, TableId, [Table], [Sql], UserId) VALUES (GETDATE(), @Action, @TableId, @Table, @Sql, @UserId); SELECT SCOPE_IDENTITY();",
-                    new { entity.Action, entity.TableId, entity.Table, entity.Sql, UserId = entity.User.Id });
+                entity.Id = connection.QuerySingleOrDefault<short>("INSERT INTO LogDb (Date, Action, TableId, [Table], [Values], UserId) VALUES (GETDATE(), @Action, @TableId, @Table, @Values, @UserId); SELECT SCOPE_IDENTITY();",
+                    new { entity.Action, entity.TableId, entity.Table, entity.Values, UserId = entity.User.Id });
+                entityId = entity.Id;
                 return entity;
             }
             catch (Exception ex)
@@ -91,6 +92,11 @@ namespace Dal.Persistences
         public override LogDb Delete(LogDb entity)
         {
             return entity;
+        }
+
+        public override string GetTableName()
+        {
+            return "LogDb";
         }
     }
 }
