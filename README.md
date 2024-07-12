@@ -33,11 +33,25 @@ C# .Net 8
 
 ## Librerías y paquetes
 
+Proyecto Dal
+
 | Paquete | Versión |
-|:-:|:-:|
-| xUnit | 2.5.3 |
+|:--|:-:|
 | Dapper | 2.1.35 |
-| Entities | 1.0.11 |
+| Entities | 1.0.23 |
+| Microsoft.Data.SqlClient | 5.2.1 |
+
+Proyecto Dal.Test
+
+| Paquete | Versión |
+|:--|:-:|
+| coverlet.collector | 6.0.2 |
+| Microsoft.Extensions.Configuration | 8.0.0 |
+| Microsoft.Extensions.Configuration.EnvironmentVariables | 8.0.0 |
+| Microsoft.Extensions.Configuration.Json | 8.0.0 |
+| Microsoft.NET.Test.Sdk | 17.10.0 |
+| xUnit | 2.9.0 |
+| xUnit.runner.visualstudio | 2.8.2 |
 
 ## Compilar y probar
 
